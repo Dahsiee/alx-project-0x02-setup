@@ -21,3 +21,10 @@ export interface PostApiResponse {
   title: string;
   body: string;
 }
+
+
+export interface UserProps {
+  name: string;
+  email: string;
+  address: string;
+}

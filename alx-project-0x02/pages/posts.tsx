@@ -1,26 +1,13 @@
 // pages/posts.tsx
-import { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import PostCard from "@/components/common/PostCard";
-import { type PostProps } from "@/interfaces";
+import { type PostProps, type PostApiResponse } from "@/interfaces";
 
-export default function Posts() {
-  const [posts, setPosts] = useState<PostProps[]>([]);
+interface PostsPageProps {
+  posts: PostProps[];
+}
 
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((res) => res.json())
-      .then((data) =>
-        setPosts(
-          data.slice(0, 10).map((post: any) => ({
-            title: post.title,
-            content: post.body,
-            userId: post.userId,
-          }))
-        )
-      );
-  }, []);
-
+export default function Posts({ posts }: PostsPageProps) {
   return (
     <div>
       <Header />
@@ -39,4 +26,23 @@ export default function Posts() {
       </main>
     </div>
   );
+}
+
+// ✅ Next.js data fetching at build time
+export async function getStaticProps() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const data: PostApiResponse[] = await res.json();
+
+  // Map API response into PostProps shape
+  const posts: PostProps[] = data.slice(0, 10).map((post) => ({
+    title: post.title,
+    content: post.body,
+    userId: post.userId,
+  }));
+
+  return {
+    props: {
+      posts,
+    },
+  };
 }

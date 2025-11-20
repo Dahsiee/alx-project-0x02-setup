@@ -14,3 +14,10 @@ export interface PostProps {
   content: string;
   userId: number;
 }
+
+export interface PostApiResponse {
+  id: number;
+  userId: number;
+  title: string;
+  body: string;
+}
